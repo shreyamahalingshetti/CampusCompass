@@ -177,42 +177,9 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Google official button render target */}
             <div className="w-full flex flex-col items-center gap-4 py-2">
               <div id="google-signin-btn" className="min-h-[46px] flex justify-center"></div>
-              
-              <div className="flex items-center w-full max-w-[320px]">
-                <div className="flex-grow h-px bg-outline-variant/40"></div>
-                <span className="px-3 text-[10px] font-semibold text-outline">OR TEST ENVIRONMENT</span>
-                <div className="flex-grow h-px bg-outline-variant/40"></div>
-              </div>
-
-              {/* Demo Fallback Button */}
-              <button
-                onClick={handleDemoLogin}
-                className="w-full max-w-[320px] flex items-center justify-center gap-2 border border-outline-variant/50 hover:bg-surface-container-low py-3 rounded-full transition-all text-xs font-bold text-on-surface shadow-sm active:scale-[0.98] cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-sm">construction</span>
-                Sign in as Demo Student (Bypass Client ID Check)
-              </button>
             </div>
-
-            {/* Troubleshooting Alert Banner */}
-            <div className="p-4 bg-surface-container-low border border-outline-variant/50 rounded-2xl w-full text-left space-y-1.5 animate-in fade-in duration-500">
-              <div className="flex items-center gap-1.5 text-secondary">
-                <span className="material-symbols-outlined text-base">warning</span>
-                <h4 className="text-xs font-bold uppercase tracking-wider">Troubleshooting Google Error 401</h4>
-              </div>
-              <p className="text-[10px] text-on-surface-variant leading-relaxed">
-                If Google blocks access with <strong>no registered origin / invalid_client</strong>, configure your Client ID in Google Console:
-              </p>
-              <ul className="text-[9.5px] text-on-surface-variant list-disc pl-4 space-y-0.5">
-                <li>Create Client ID type as <strong>Web Application</strong> (not Desktop).</li>
-                <li>Add <strong>http://localhost:3000</strong> to <em>Authorized JavaScript Origins</em>.</li>
-              </ul>
-            </div>
-
-            {/* Terms of Service notice */}
             <p className="text-[10px] text-center text-outline leading-relaxed max-w-xs mx-auto">
               Your credentials and bookmarks will synchronize to the local storage index for live search persistence.
             </p>
