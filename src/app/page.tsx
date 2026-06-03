@@ -268,18 +268,7 @@ export default function Home() {
     }, 1500);
   };
 
-  if (isAuthChecking) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-        <div className="relative w-12 h-12 mb-4">
-          <div className="absolute inset-0 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-        </div>
-        <p className="text-[10px] font-bold text-on-surface-variant animate-pulse tracking-wider uppercase">
-          Verifying session credentials...
-        </p>
-      </div>
-    );
-  }
+  if (isAuthChecking) return null;
 
   return (
     <div className="flex flex-col min-h-screen">
