@@ -79,10 +79,12 @@ export default function Home() {
     if (logged && email) {
       setIsLoggedIn(true);
       setUserEmail(email);
-      setIsAuthChecking(false);
     } else {
-      router.push("/login");
+      setIsLoggedIn(false);
+      setUserEmail(null);
     }
+    setIsAuthChecking(false);
+
     // Restore saved list from localStorage (filter out any legacy non-cuid IDs)
     const saved = localStorage.getItem("savedIds");
     if (saved) {
@@ -268,8 +270,6 @@ export default function Home() {
     }, 1500);
   };
 
-  if (isAuthChecking) return null;
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top Header */}
@@ -365,140 +365,201 @@ export default function Home() {
               </div>
             </section>
 
-            {/* Search and Category Filter Section (Floating Overlap) */}
-            <section id="college-explore" className="px-6 -mt-8 relative z-10 max-w-4xl mx-auto">
-              <div className="bg-surface-container-lowest p-1.5 rounded-full shadow-lg flex items-center border border-outline-variant">
-                <span className="material-symbols-outlined text-outline ml-4 select-none">search</span>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-grow bg-transparent border-none focus:ring-0 px-3 py-3.5 text-sm font-medium text-on-surface placeholder-outline/80"
-                  placeholder="Search colleges, degrees, or cities..."
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="p-1 text-on-surface-variant hover:bg-surface-container-low rounded-full mr-2"
-                  >
-                    <span className="material-symbols-outlined text-sm">close</span>
-                  </button>
-                )}
-                <button
-                  onClick={() => setSelectedFilter("All")}
-                  className="bg-primary text-on-primary hover:brightness-110 rounded-full p-3 mr-1 transition-all"
-                  title="Reset Filters"
-                >
-                  <span className="material-symbols-outlined select-none text-base">tune</span>
-                </button>
-              </div>
-
-              {/* Tag Quick Filters */}
-              <div className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-none select-none">
-                {["All", "Engineering", "Management", "Science", "Design", "High Placement", "Affordable"].map(
-                  (filter) => {
-                    const isSelected = selectedFilter === filter;
-                    return (
-                      <button
-                        key={filter}
-                        onClick={() => setSelectedFilter(filter)}
-                        className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all whitespace-nowrap cursor-pointer ${
-                          isSelected
-                            ? "bg-primary text-on-primary border-primary shadow-sm"
-                            : "bg-surface-container-lowest text-on-surface-variant border-outline-variant/60 hover:bg-surface-container-low"
-                        }`}
-                      >
-                        {filter}
-                      </button>
-                    );
-                  }
-                )}
-              </div>
-            </section>
-
-            {/* Explore Colleges Listing */}
-            <section className="mt-8 px-6 max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="font-headline-md text-2xl font-bold text-on-surface">Explore Colleges</h2>
-                  <p className="font-body-md text-xs text-on-surface-variant">
-                    Showing {colleges.length} of {totalCount} matches
-                  </p>
+            {/* Search, Filter & Colleges Listing or Premium Gating */}
+            {isAuthChecking ? (
+              <div className="max-w-7xl mx-auto px-6 mt-8 space-y-8">
+                {/* Search Skeleton */}
+                <div className="h-16 bg-surface-container-low rounded-full w-full max-w-4xl mx-auto animate-pulse"></div>
+                {/* Filters Skeleton */}
+                <div className="flex gap-2 justify-center max-w-2xl mx-auto overflow-hidden">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-8 bg-surface-container-low rounded-full w-24 animate-pulse"></div>
+                  ))}
                 </div>
-
-                {compareIds.length > 0 && (
-                  <button
-                    onClick={() => setIsCompareDrawerOpen(true)}
-                    className="bg-primary-container text-on-primary-container hover:bg-primary-container/80 text-xs font-semibold px-4 py-2 rounded-full border border-primary/20 shadow-sm flex items-center gap-1 animate-pulse"
-                  >
-                    Compare Matrix ({compareIds.length})
-                    <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                  </button>
-                )}
-              </div>
-
-              {isLoading && colleges.length === 0 ? (
-                /* Premium Skeleton Grid */
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Grid Skeletons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
                   {[...Array(6)].map((_, i) => (
                     <SkeletonCard key={i} />
                   ))}
                 </div>
-              ) : colleges.length === 0 ? (
-                <div className="py-16 text-center bg-surface-container-low/30 border border-outline-variant/40 rounded-2xl p-8">
-                  <span className="material-symbols-outlined text-outline text-5xl mb-3">school</span>
-                  <h3 className="font-headline-md text-lg text-on-surface mb-1">No colleges match your search</h3>
-                  <p className="font-body-md text-xs text-on-surface-variant max-w-sm mx-auto">
-                    Try checking your spelling, resetting the category filters, or search for broader queries like "Delhi" or "MBA".
-                  </p>
-                  <button
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedFilter("All");
-                    }}
-                    className="mt-4 text-xs font-bold text-primary hover:underline"
-                  >
-                    Reset All Filters
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {colleges.map((college) => (
-                      <CollegeCard
-                        key={college.id}
-                        college={college}
-                        isSaved={savedIds.includes(college.id)}
-                        isComparing={compareIds.includes(college.id)}
-                        onToggleSave={() => toggleSave(college.id)}
-                        onToggleCompare={() => toggleCompare(college.id)}
-                      />
-                    ))}
+              </div>
+            ) : isLoggedIn ? (
+              <>
+                {/* Search and Category Filter Section (Floating Overlap) */}
+                <section id="college-explore" className="px-6 -mt-8 relative z-10 max-w-4xl mx-auto">
+                  <div className="bg-surface-container-lowest p-1.5 rounded-full shadow-lg flex items-center border border-outline-variant">
+                    <span className="material-symbols-outlined text-outline ml-4 select-none">search</span>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="flex-grow bg-transparent border-none focus:ring-0 px-3 py-3.5 text-sm font-medium text-on-surface placeholder-outline/80"
+                      placeholder="Search colleges, degrees, or cities..."
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="p-1 text-on-surface-variant hover:bg-surface-container-low rounded-full mr-2"
+                      >
+                        <span className="material-symbols-outlined text-sm">close</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setSelectedFilter("All")}
+                      className="bg-primary text-on-primary hover:brightness-110 rounded-full p-3 mr-1 transition-all"
+                      title="Reset Filters"
+                    >
+                      <span className="material-symbols-outlined select-none text-base">tune</span>
+                    </button>
                   </div>
 
-                  {/* Infinite Scroll Trigger and Loader */}
-                  <div id="infinite-scroll-trigger" className="pt-6 pb-12 flex flex-col items-center justify-center">
-                    {isLoadingMore ? (
-                      <div className="flex flex-col items-center gap-2 text-primary">
-                        <span className="material-symbols-outlined animate-spin text-3xl">sync</span>
-                        <span className="text-[10px] font-semibold tracking-wider uppercase">Loading more premium campuses...</span>
-                      </div>
-                    ) : hasMore ? (
-                      <button
-                        onClick={loadMoreColleges}
-                        className="bg-surface-container-lowest text-primary hover:bg-primary hover:text-on-primary border border-primary/20 hover:border-transparent px-8 py-3 rounded-full text-xs font-bold shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
-                      >
-                        Load More Colleges
-                      </button>
-                    ) : (
-                      <p className="text-[10px] text-outline font-semibold tracking-wide uppercase">
-                        Reached the end of accredited listings ({totalCount} total)
-                      </p>
+                  {/* Tag Quick Filters */}
+                  <div className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-none select-none">
+                    {["All", "Engineering", "Management", "Science", "Design", "High Placement", "Affordable"].map(
+                      (filter) => {
+                        const isSelected = selectedFilter === filter;
+                        return (
+                          <button
+                            key={filter}
+                            onClick={() => setSelectedFilter(filter)}
+                            className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all whitespace-nowrap cursor-pointer ${
+                              isSelected
+                                ? "bg-primary text-on-primary border-primary shadow-sm"
+                                : "bg-surface-container-lowest text-on-surface-variant border-outline-variant/60 hover:bg-surface-container-low"
+                            }`}
+                          >
+                            {filter}
+                          </button>
+                        );
+                      }
                     )}
                   </div>
+                </section>
+
+                {/* Explore Colleges Listing */}
+                <section className="mt-8 px-6 max-w-7xl mx-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="font-headline-md text-2xl font-bold text-on-surface">Explore Colleges</h2>
+                      <p className="font-body-md text-xs text-on-surface-variant">
+                        Showing {colleges.length} of {totalCount} matches
+                      </p>
+                    </div>
+
+                    {compareIds.length > 0 && (
+                      <button
+                        onClick={() => setIsCompareDrawerOpen(true)}
+                        className="bg-primary-container text-on-primary-container hover:bg-primary-container/80 text-xs font-semibold px-4 py-2 rounded-full border border-primary/20 shadow-sm flex items-center gap-1 animate-pulse"
+                      >
+                        Compare Matrix ({compareIds.length})
+                        <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {isLoading && colleges.length === 0 ? (
+                    /* Premium Skeleton Grid */
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {[...Array(6)].map((_, i) => (
+                        <SkeletonCard key={i} />
+                      ))}
+                    </div>
+                  ) : colleges.length === 0 ? (
+                    <div className="py-16 text-center bg-surface-container-low/30 border border-outline-variant/40 rounded-2xl p-8">
+                      <span className="material-symbols-outlined text-outline text-5xl mb-3">school</span>
+                      <h3 className="font-headline-md text-lg text-on-surface mb-1">No colleges match your search</h3>
+                      <p className="font-body-md text-xs text-on-surface-variant max-w-sm mx-auto">
+                        Try checking your spelling, resetting the category filters, or search for broader queries like "Delhi" or "MBA".
+                      </p>
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          setSelectedFilter("All");
+                        }}
+                        className="mt-4 text-xs font-bold text-primary hover:underline"
+                      >
+                        Reset All Filters
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {colleges.map((college) => (
+                          <CollegeCard
+                            key={college.id}
+                            college={college}
+                            isSaved={savedIds.includes(college.id)}
+                            isComparing={compareIds.includes(college.id)}
+                            onToggleSave={() => toggleSave(college.id)}
+                            onToggleCompare={() => toggleCompare(college.id)}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Infinite Scroll Trigger and Loader */}
+                      <div id="infinite-scroll-trigger" className="pt-6 pb-12 flex flex-col items-center justify-center">
+                        {isLoadingMore ? (
+                          <div className="flex flex-col items-center gap-2 text-primary">
+                            <span className="material-symbols-outlined animate-spin text-3xl">sync</span>
+                            <span className="text-[10px] font-semibold tracking-wider uppercase">Loading more premium campuses...</span>
+                          </div>
+                        ) : hasMore ? (
+                          <button
+                            onClick={loadMoreColleges}
+                            className="bg-surface-container-lowest text-primary hover:bg-primary hover:text-on-primary border border-primary/20 hover:border-transparent px-8 py-3 rounded-full text-xs font-bold shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
+                          >
+                            Load More Colleges
+                          </button>
+                        ) : (
+                          <p className="text-[10px] text-outline font-semibold tracking-wide uppercase">
+                            Reached the end of accredited listings ({totalCount} total)
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </section>
+              </>
+            ) : (
+              /* Gated Directory Panel (Premium CTA UI) */
+              <section id="college-explore" className="px-6 -mt-8 relative z-10 max-w-4xl mx-auto">
+                <div className="relative overflow-hidden rounded-3xl border border-outline-variant/60 bg-gradient-to-tr from-primary/[0.04] to-secondary/[0.04] dark:from-primary/[0.08] dark:to-secondary/[0.08] p-8 md:p-12 shadow-xl text-center flex flex-col items-center justify-center space-y-6">
+                  {/* Decorative mesh inside card */}
+                  <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+                  <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+                  
+                  <div className="w-16 h-16 bg-primary/15 rounded-2xl flex items-center justify-center shadow-sm text-primary mb-2 select-none">
+                    <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      lock
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-3 max-w-xl">
+                    <h3 className="font-headline-md text-2xl font-bold text-on-surface tracking-tight">
+                      Accredited Directory Locked
+                    </h3>
+                    <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
+                      Join CampusCompass to unlock the search bar, explore 250+ top accredited universities, compare placement packages side-by-side, view cost breakdowns, and build your custom shortlist.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center pt-2">
+                    <button
+                      onClick={handleOpenLogin}
+                      className="w-full sm:w-auto bg-primary hover:bg-primary/95 text-on-primary font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-primary/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer text-xs"
+                    >
+                      <span className="material-symbols-outlined text-base">login</span>
+                      Sign In to Unlock Directory
+                    </button>
+                  </div>
+                  
+                  <div className="text-[10px] text-outline font-semibold tracking-wider uppercase pt-4 flex items-center gap-1.5 justify-center">
+                    <span className="material-symbols-outlined text-sm">verified_user</span>
+                    Google credentials required to synchronize active dashboard indexes.
+                  </div>
                 </div>
-              )}
-            </section>
+              </section>
+            )}
 
             {/* Statistics Section */}
             <section className="mt-16 px-6 max-w-4xl mx-auto">
