@@ -286,7 +286,7 @@ export default function Home() {
 
       {/* Main Content Area */}
       <main className="mt-16 flex-grow pb-24 text-on-background">
-        
+
         {/* Notification Banner */}
         {applyStatus && (
           <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-primary text-on-primary px-6 py-3 rounded-full shadow-2xl flex items-center gap-2 border border-primary-fixed/20 animate-in fade-in slide-in-from-top duration-300">
@@ -302,14 +302,14 @@ export default function Home() {
             <section className="hero-gradient px-6 pt-16 pb-24 text-center relative overflow-hidden">
               <div className="absolute top-0 right-0 w-80 h-80 bg-white opacity-5 rounded-full -mr-24 -mt-24 blur-3xl"></div>
               <div className="absolute -left-10 bottom-0 w-64 h-64 bg-secondary-container opacity-5 rounded-full blur-3xl"></div>
-              
+
               <h1 className="font-display-lg text-3xl md:text-5xl text-white mb-4 leading-tight max-w-2xl mx-auto">
                 Find the Right College for Your Future
               </h1>
               <p className="font-body-md text-sm md:text-lg text-white/90 mb-8 max-w-[540px] mx-auto">
                 Explore top universities, compare placements and tuition fees, and make informed choices.
               </p>
-              
+
               <button
                 onClick={() => {
                   if (isLoggedIn) {
@@ -422,11 +422,10 @@ export default function Home() {
                           <button
                             key={filter}
                             onClick={() => setSelectedFilter(filter)}
-                            className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all whitespace-nowrap cursor-pointer ${
-                              isSelected
-                                ? "bg-primary text-on-primary border-primary shadow-sm"
-                                : "bg-surface-container-lowest text-on-surface-variant border-outline-variant/60 hover:bg-surface-container-low"
-                            }`}
+                            className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all whitespace-nowrap cursor-pointer ${isSelected
+                              ? "bg-primary text-on-primary border-primary shadow-sm"
+                              : "bg-surface-container-lowest text-on-surface-variant border-outline-variant/60 hover:bg-surface-container-low"
+                              }`}
                           >
                             {filter}
                           </button>
@@ -527,19 +526,19 @@ export default function Home() {
                   {/* Decorative mesh inside card */}
                   <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
                   <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
-                  
+
                   <div className="w-16 h-16 bg-primary/15 rounded-2xl flex items-center justify-center shadow-sm text-primary mb-2 select-none">
                     <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                       lock
                     </span>
                   </div>
-                  
+
                   <div className="space-y-3 max-w-xl">
                     <h3 className="font-headline-md text-2xl font-bold text-on-surface tracking-tight">
                       Accredited Directory Locked
                     </h3>
                     <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
-                      Join CampusCompass to unlock the search bar, explore 250+ top accredited universities, compare placement packages side-by-side, view cost breakdowns, and build your custom shortlist.
+                      Join CampusCompass to unlock the search bar, explore 50+ top accredited universities, compare placement packages side-by-side, view cost breakdowns, and build your custom shortlist.
                     </p>
                   </div>
 
@@ -552,7 +551,7 @@ export default function Home() {
                       Sign In to Unlock Directory
                     </button>
                   </div>
-                  
+
                   <div className="text-[10px] text-outline font-semibold tracking-wider uppercase pt-4 flex items-center gap-1.5 justify-center">
                     <span className="material-symbols-outlined text-sm">verified_user</span>
                     Google credentials required to synchronize active dashboard indexes.
@@ -573,7 +572,7 @@ export default function Home() {
                     <p className="font-label-sm text-[11px] uppercase tracking-wider text-on-surface-variant">Accredited Colleges</p>
                   </div>
                 </div>
-                
+
                 <div className="bg-surface-container-low/60 hover:bg-surface-container-low transition-all duration-300 p-6 rounded-2xl border border-outline-variant/40 flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
                     <span className="material-symbols-outlined text-primary text-2xl">groups</span>
@@ -583,7 +582,7 @@ export default function Home() {
                     <p className="font-label-sm text-[11px] uppercase tracking-wider text-on-surface-variant">Students Guided</p>
                   </div>
                 </div>
-                
+
                 <div className="bg-surface-container-low/60 hover:bg-surface-container-low transition-all duration-300 p-6 rounded-2xl border border-outline-variant/40 flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
                     <span className="material-symbols-outlined text-primary text-2xl">menu_book</span>
@@ -601,7 +600,7 @@ export default function Home() {
               <h2 className="font-headline-md text-2xl font-bold text-on-surface mb-6 text-center">
                 Our Key Platform Features
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Feature Card 1 */}
                 <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/50 shadow-sm flex flex-col gap-3 hover:border-primary/30 transition-all duration-200">
@@ -649,7 +648,7 @@ export default function Home() {
                 <p className="font-body-md text-xs md:text-sm text-on-primary/80 mb-8 max-w-[320px] md:max-w-[400px] mx-auto">
                   Join thousands of students who found their target colleges through CampusCompass.
                 </p>
-                
+
                 {isLoggedIn ? (
                   <div className="max-w-[320px] mx-auto bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-2xl text-on-primary">
                     <p className="text-xs font-semibold">You are logged in as {userEmail}</p>
