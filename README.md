@@ -6,7 +6,7 @@ A full-stack **College Discovery Platform** that helps students search, compare,
 
 ## Live Demo
 
-🔗 [https://your-vercel-url.vercel.app](https://your-vercel-url.vercel.app)
+🔗 [https://campus-compass-mocha.vercel.app/](https://campus-compass-mocha.vercel.app/)
 
 ---
 
