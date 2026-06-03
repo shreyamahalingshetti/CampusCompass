@@ -36,6 +36,7 @@ export default function Home() {
   // Authentication State
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
 
   // College List Actions States
   const [savedIds, setSavedIds] = useState<string[]>([]);
@@ -78,6 +79,9 @@ export default function Home() {
     if (logged && email) {
       setIsLoggedIn(true);
       setUserEmail(email);
+      setIsAuthChecking(false);
+    } else {
+      router.push("/login");
     }
     // Restore saved list from localStorage (filter out any legacy non-cuid IDs)
     const saved = localStorage.getItem("savedIds");
@@ -263,6 +267,19 @@ export default function Home() {
       }, 3000);
     }, 1500);
   };
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
+        <div className="relative w-12 h-12 mb-4">
+          <div className="absolute inset-0 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+        </div>
+        <p className="text-[10px] font-bold text-on-surface-variant animate-pulse tracking-wider uppercase">
+          Verifying session credentials...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
