@@ -153,7 +153,7 @@ Additional metadata such as descriptions, placement statistics, and student revi
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/campuscompass.git
+git clone https://github.com/shreyamahalingshetti/campuscompass.git
 cd campuscompass
 
 # 2. Install dependencies
